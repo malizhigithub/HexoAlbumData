@@ -117,10 +117,13 @@
           var data = res.list[j].arr;
           var liTmpl = "";
           for (var i = 0, len = data.link.length; i < len; i++) {
-            //var minSrc = 'http://p1ju2a9a7.bkt.clouddn.com/min_photos/' + data.link[i] + '?imageMogr2/auto-orient';
-            var minSrc = 'https://raw.githubusercontent.com/biueo/Blog_Album/master/min_photos/' + data.link[i];
-            var src = 'https://raw.githubusercontent.com/biueo/Blog_Album/master/photos/' + data.link[i];
-            //var src = 'http://p1ju2a9a7.bkt.clouddn.com/' + data.link[i];
+          
+            //var minSrc = 'https://raw.githubusercontent.com/yourgithub/Blog_Album/master/min_photos/' + data.link[i];
+            var minSrc = 'https://raw.githubusercontent.com/yourgithub/Blog_Album/master/min_photos/' + data.link[i];
+			
+           // var src = 'https://raw.githubusercontent.com/yourgithub/Blog_Album/master/photos/' + data.link[i];
+            var src = 'https://raw.githubusercontent.com/yourgithub/Blog_Album/master/photos/' + data.link[i];
+           
             var type = data.type[i];
             var target = src + (type === 'video' ? '.mp4' : '.jpg');
 
