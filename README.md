@@ -6,8 +6,7 @@
 
 - 使用一个Python小脚本对图片进行压缩编辑，并且上传到自己的GitHub，这就需要我们现在GitHub上新建一个Repository,这里我依然命名为Blog_Album, 然后在本地连接远程仓库执行git remote add origin yourrepositroy@gitaddress
 
-- 然后下载脚本tool.py文件至此文件内，此文件需要Imageprocessing.py文件的支持,可以将此文件保存在你的python3包的安装位置
-C:\Users\username\AppData\Local\Programs\Python\Python35-32\Lib\site-packages
+- 然后下载脚本tool.py文件至此文件夹内
 
 - 执行tool.py的时候如果没有PIL库的话会报错，安装即可。安装PIL只需在cmd中执行：pip install Pillow就可以了。
 此外图片命名方式需要按照特定方式即：2017-02-02_discriptionofyourpic.jpg，图片的格式支持常见格式，时间和描述之间存在下划线。
