@@ -1,10 +1,11 @@
 #coding: utf-8
 from PIL import Image
+import shutil
 import os
 import sys
 import json
 from datetime import datetime
-# from ImageProcess import Graphics
+#from ImageProcess import Graphics
 
 class Graphics:  
     '''图片处理类
@@ -107,7 +108,7 @@ def list_img_file(directory):
     # print old_list
     new_list = []
     for filename in old_list:
-        name, fileformat = filename.split(".",-1)
+        name, fileformat = filename.split(".")
         if fileformat.lower() == "jpg" or fileformat.lower() == "png" or fileformat.lower() == "gif":
             new_list.append(filename)
     # print new_list
@@ -150,28 +151,22 @@ def compress_photo():
     '''
     src_dir, des_dir = "photos/", "min_photos/"
     
-    # if directory_exists(src_dir):
-    if not directory_exists(src_dir):
-        make_directory(src_dir)
+    if directory_exists(src_dir):
+        if not directory_exists(src_dir):
+            make_directory(src_dir)
         # business logic
-    file_list_src = list_img_file(src_dir)
-    # if directory_exists(des_dir):
-    if not directory_exists(des_dir):
-        make_directory(des_dir)
-    file_list_des = list_img_file(des_dir)
+        file_list_src = list_img_file(src_dir)
+    if directory_exists(des_dir):
+        if not directory_exists(des_dir):
+            make_directory(des_dir)
+        file_list_des = list_img_file(des_dir)
         # print file_list
     '''如果已经压缩了，就不再压缩'''
     for i in range(len(file_list_des)):
         if file_list_des[i] in file_list_src:
             file_list_src.remove(file_list_des[i])
-    compress('4', des_dir, src_dir, file_list_src)
+    compress('1', des_dir, src_dir, file_list_src)
 
-
-def get_list_date_index(year_month,list_info):
-    for i in range(len(list_info)):
-        if list_info[i]['date']==year_month:
-            return i
-    return -1
 
 def handle_photo():
     '''根据图片的文件名处理成需要的json格式的数据
@@ -184,28 +179,36 @@ def handle_photo():
     list_info = []
     for i in range(len(file_list)):
         filename = file_list[i]
-        date_str, info = filename.split("_",1)
+        date_str, *info = filename.split("_")
         info='_'.join(info)
         info, _ = info.split(".")
         date = datetime.strptime(date_str, "%Y-%m-%d")
-        year_month = date_str[0:7]
-        if get_list_date_index(year_month,list_info) == -1 :
-            new_dict = {"date": year_month, "arr": {'year': date.year,
-                                                    'month': date.month,
-                                                    'link': [filename],
-                                                    'text': [info],
-                                                    'type': ['image']
-                                                    }
+        year_month = date_str[0:7]            
+        if i == 0:  # 处理第一个文件
+            new_dict = {"date": year_month, "arr":{'year': date.year,
+                                                                   'month': date.month,
+                                                                   'link': [filename],
+                                                                   'text': [info],
+                                                                   'type': ['image']
+                                                                   }
+                                        } 
+            list_info.append(new_dict)
+        elif year_month != list_info[-1]['date']:  # 不是最后的一个日期，就新建一个dict
+            new_dict = {"date": year_month, "arr":{'year': date.year,
+                                                   'month': date.month,
+                                                   'link': [filename],
+                                                   'text': [info],
+                                                   'type': ['image']
+                                                   }
                         }
             list_info.append(new_dict)
-        else:
-            index =get_list_date_index(year_month,list_info)
-            list_info[index]['arr']['link'].append(filename)
-            list_info[index]['arr']['text'].append(info)
-            list_info[index]['arr']['type'].append('image')
-    list_info.sort(key=lambda x: x['date'], reverse=True)
+        else:  # 同一个日期
+            list_info[-1]['arr']['link'].append(filename)
+            list_info[-1]['arr']['text'].append(info)
+            list_info[-1]['arr']['type'].append('image')
+    list_info.reverse()  # 翻转
     final_dict = {"list": list_info}
-    with open("E://YourBlog/themes/next/source/lib/album/data.json","w") as fp:
+    with open("E:/malizhiBlog/blog/themes/next/source/lib/album/data.json","w") as fp:
         json.dump(final_dict, fp)
 def cut_photo():
     """裁剪算法
